@@ -5,7 +5,7 @@
 $ pip install BeautifulSoup4
 $ sudo -H pip install --upgrade youtube-dl
 ```
-## official pages
+## Official pages
 
 [Installing Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup
 )
@@ -14,6 +14,6 @@ $ sudo -H pip install --upgrade youtube-dl
 
 ## Example
     python first_scr.py https://egghead.io/courses/build-a-server-rendered-code-split-app-in-react-with-react-universal-component
-## I work with
+## I worked with
     pip 9.0.1
     Python 2.7.13+
