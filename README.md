@@ -2,8 +2,11 @@
 
 ## Requirements
 ```bash
-$ pip install BeautifulSoup4
+$ sudo apt install python-pip
+$ sudo apt install ffmpeg
 $ sudo -H pip install --upgrade youtube-dl
+$ pip install BeautifulSoup
+$ pip install BeautifulSoup4
 ```
 ## Official pages
 
@@ -17,3 +20,4 @@ $ sudo -H pip install --upgrade youtube-dl
 ## I worked with
     pip 9.0.1
     Python 2.7.13+
+
