@@ -10,6 +10,7 @@ import re
 import sys
 import os
 import youtube_dl
+import json
 from BeautifulSoup import BeautifulSoup
 
 
@@ -23,13 +24,19 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+ydl_opts = {
+    'format': 'bestvideo+bestaudio/best',
+    'verbose': False,
+    'ignoreerrors':True
+}
 
 url = sys.argv[1]
 print bcolors.OKBLUE + "Obteniendo datos de la pagina: " + bcolors.ENDC + bcolors.BOLD+ url + bcolors.ENDC
 text = urllib2.urlopen(url).read()
 soup = BeautifulSoup(text)
-title = soup.find('div', {
-                  'class': 'f4 f3-m f2-l mt3 mb4 mt0-l avenir fw6 lh-title flex items-center base'})
+title = soup.find('span', {
+                  'class': 'f1-ns f2-m f3 fw4 black-90 tc-m tl-ns tc'})
+
 if title is None:
     print bcolors.FAIL + "ERROR no se pudo encontrar el titulo de la pagina" + bcolors.ENDC
     exit()
@@ -43,28 +50,31 @@ if not os.path.exists(directory):
     print bcolors.OKGREEN + "Directorio creado "  + bcolors.ENDC
 
 os.chdir(directory)
-ydl_opts = {
-    'format': 'bestvideo+bestaudio/best',
-    'verbose': True,
-    'ignoreerrors':True
-}
 
 
 print bcolors.HEADER + "Descargando Imagen: " + bcolors.ENDC
-imageUrl = soup.find('img', {'class': re.compile('courseIllustration')})['src']
+json_data = soup.find('script', {
+    'class': 'js-react-on-rails-component'
+}).text
+
+parsed_json = json.loads(json_data)
+
+imageUrl = parsed_json['course']['course']['square_cover_large_url']
+
+if imageUrl is None:
+    print bcolors.FAIL + "ERROR no se pudo encontrar la imagen de la pagina" + bcolors.ENDC
+    exit()
+print imageUrl
 urllib.urlretrieve(imageUrl, os.path.basename(imageUrl))
 
 print bcolors.HEADER + "Obteniendo enlaces: " + bcolors.ENDC
-div = soup.find('div', attrs={'class': re.compile('courseInfoLessonList')})
-
-links = div.findAll('a', {'class': re.compile('lh-title')})
-for a in links:
-    videe = "https://egghead.io" +a['href']
-    print bcolors.OKGREEN + "Descargando: "+ videe + bcolors.ENDC
+lessons = parsed_json['course']['course']['lessons']
+for lesson in lessons:
+    print bcolors.OKGREEN + "Descargando video: "+ lesson['title'] + bcolors.ENDC
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        test_url = videe
+        test_url = lesson['url']
         ydl.print_debug_header()
-        info = ydl.extract_info(test_url, download=False)
+        info = ydl.extract_info(test_url, download=True)
 
 print bcolors.OKGREEN + " -------------------------------- "  + bcolors.ENDC
-print len(links), "Videos procesados"
+print len(lessons), "Videos descargados"
