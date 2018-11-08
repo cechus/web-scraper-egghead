@@ -34,8 +34,8 @@ url = sys.argv[1]
 print bcolors.OKBLUE + "Obteniendo datos de la pagina: " + bcolors.ENDC + bcolors.BOLD+ url + bcolors.ENDC
 text = urllib2.urlopen(url).read()
 soup = BeautifulSoup(text)
-title = soup.find('span', {
-                  'class': 'f1-ns f2-m f3 fw4 black-90 tc-m tl-ns tc'})
+title = soup.find('h1', {
+                  'class': 'f1-ns mt0 mb3 pt0 pb0 f2-m f3 fw5 black-90 tc-m'})
 
 if title is None:
     print bcolors.FAIL + "ERROR no se pudo encontrar el titulo de la pagina" + bcolors.ENDC
