@@ -52,24 +52,24 @@ if not os.path.exists(directory):
 os.chdir(directory)
 
 
-print bcolors.HEADER + "Descargando Imagen: " + bcolors.ENDC
+#print bcolors.HEADER + "Descargando Imagen: " + bcolors.ENDC
 json_data = soup.find('script', {
     'class': 'js-react-on-rails-component'
 }).text
 
 parsed_json = json.loads(json_data)
 
-imageUrl = parsed_json['course']['course']['square_cover_large_url']
+#imageUrl = parsed_json['course']['course']['square_cover_large_url']
 
-if imageUrl is None:
+#if imageUrl is None:
 
-   print bcolors.FAIL + "ERROR no se pudo encontrar la imagen de la pagina" + bcolors.ENDC
-   exit()
-print imageUrl
-urllib.urlretrieve(imageUrl, os.path.basename(imageUrl))
+#  print bcolors.FAIL + "ERROR no se pudo encontrar la imagen de la pagina" + bcolors.ENDC
+#   exit()
+#print imageUrl
+#urllib.urlretrieve(imageUrl, os.path.basename(imageUrl))
 
 print bcolors.HEADER + "Obteniendo enlaces: " + bcolors.ENDC
-lessons = parsed_json['course']['course']['lessons']
+lessons = parsed_json['playlist']['items']
 for lesson in lessons:
     print bcolors.OKGREEN + "Descargando video: "+ lesson['title'] + bcolors.ENDC
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
